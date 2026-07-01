@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bug Baron | Premium Pest Control Services</title>
+  <meta name="description" content="Bug Baron offers premium, professional pest control services. Expert extermination of rodents, termites, cockroaches, mosquitoes & more. Get a free quote today." />
+  <meta name="keywords" content="pest control, exterminator, rodent control, termite treatment, cockroach removal, professional pest control, Bug Baron" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* =========================================
+       CSS VARIABLES & RESET
+    ========================================= */
+    :root {
+      --bg-dark:      #0a0c0a;
+      --bg-mid:       #111611;
+      --bg-card:      #141a14;
+      --green-deep:   #1a3a1a;
+      --green-main:   #2e6b2e;
+      --green-light:  #4a9e4a;
+      --green-bright: #6dc96d;
+      --gold:         #c9a84c;
+      --gold-light:   #e2c97e;
+      --text-primary: #f0f4f0;
+      --text-muted:   #8a9e8a;
+      --text-faint:   #4a5e4a;
+      --border:       rgba(74,158,74,0.15);
+      --border-gold:  rgba(201,168,76,0.3);
+      --shadow:       0 20px 60px rgba(0,0,0,0.6);
+      --radius:       16px;
+      --radius-sm:    8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* =========================================
+       LOADER
+    ========================================= */
+    #loader {
+      position: fixed; inset: 0;
+      background: var(--bg-dark);
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      transition: opacity 0.6s, visibility 0.6s;
+    }
+    #loader.hidden { opacity: 0; visibility: hidden; }
+    .loader-bug {
+      font-size: 64px;
+      animation: bugBounce 0.8s ease-in-out infinite alternate;
+    }
+    .loader-bar {
+      width: 200px; height: 3px;
+      background: var(--green-deep);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .loader-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-light), var(--gold));
+      border-radius: 99px;
+      animation: loadFill 1.5s ease-in-out forwards;
+    }
+    @keyframes bugBounce { from { transform: translateY(0) rotate(-10deg); } to { transform: translateY(-12px) rotate(10deg); } }
+    @keyframes loadFill { from { width: 0; } to { width: 100%; } }
+
+    /* =========================================
+       SCROLLBAR
+    ========================================= */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--green-main); border-radius: 99px; }
+
+    /* =========================================
+       NAVBAR
+    ========================================= */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 20px 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: all 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(10,12,10,0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 5%;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+    .nav-logo span { color: var(--green-bright); }
+    .nav-logo sup { color: var(--gold); font-size: 0.5em; vertical-align: super; }
+    .nav-links {
+      display: flex; gap: 36px; align-items: center;
+    }
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--green-bright);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: linear-gradient(135deg, var(--green-main), var(--green-light));
+      color: white !important;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-size: 0.85rem !important;
+      font-weight: 600 !important;
+      transition: transform 0.3s, box-shadow 0.3s !important;
+    }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,107,46,0.4) !important; }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--text-primary);
+      transition: all 0.3s;
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0;
+        background: rgba(10,12,10,0.98); backdrop-filter: blur(20px);
+        flex-direction: column; padding: 24px; gap: 20px;
+        border-bottom: 1px solid var(--border); }
+      .nav-links.open { display: flex; }
+      .nav-hamburger { display: flex; }
+    }
+
+    /* =========================================
+       HERO
+    ========================================= */
+    #home {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 120px 5% 80px;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(46,107,46,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 20% 80%, rgba(26,58,26,0.3) 0%, transparent 50%),
+        linear-gradient(160deg, #0a0c0a 0%, #0d150d 50%, #0a0c0a 100%);
+    }
+    .hero-grid-overlay {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(74,158,74,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,158,74,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 680px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid var(--border-gold);
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 28px;
+      animation: fadeDown 0.8s 0.2s both;
+    }
+    .hero-badge::before { content: '🛡️'; }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      animation: fadeDown 0.8s 0.4s both;
+    }
+    .hero-title .accent { color: var(--green-bright); }
+    .hero-title .gold-word { color: var(--gold); }
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 500px;
+      margin-bottom: 40px;
+      animation: fadeDown 0.8s 0.6s both;
+    }
+    .hero-actions {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      animation: fadeDown 0.8s 0.8s both;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--green-main) 0%, var(--green-light) 100%);
+      color: white;
+      padding: 16px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none; cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(46,107,46,0.45); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent;
+      color: var(--text-primary);
+      padding: 15px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-outline:hover { border-color: var(--green-light); color: var(--green-bright); background: rgba(74,158,74,0.05); }
+    .hero-stats {
+      display: flex; gap: 48px; margin-top: 60px;
+      animation: fadeDown 0.8s 1s both;
+    }
+    .hero-stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--green-bright);
+    }
+    .hero-stat-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .hero-visual {
+      position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+      width: min(480px, 45vw);
+      z-index: 2;
+      animation: fadeLeft 1s 0.5s both;
+    }
+    .hero-image-frame {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .hero-image-frame img {
+      width: 100%; height: 520px;
+      object-fit: cover;
+      filter: brightness(0.85) saturate(1.1);
+    }
+    .hero-image-badge {
+      position: absolute; bottom: 24px; left: 24px;
+      background: rgba(10,12,10,0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-gold);
+      padding: 16px 22px;
+      border-radius: 12px;
+    }
+    .hero-image-badge strong { color: var(--gold); font-size: 1.2rem; display: block; }
+    .hero-image-badge span { color: var(--text-muted); font-size: 0.82rem; }
+    @media (max-width: 900px) {
+      .hero-visual { display: none; }
+      .hero-content { max-width: 100%; }
+    }
+
+    /* =========================================
+       SECTION HELPERS
+    ========================================= */
+    section { padding: 100px 5%; }
+    .section-tag {
+      display: inline-block;
+      background: rgba(74,158,74,0.1);
+      border: 1px solid var(--border);
+      color: var(--green-bright);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 560px;
+    }
+    .section-header { margin-bottom: 60px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-subtitle { margin: 0 auto; }
+    .divider {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--green-light), var(--gold));
+      border-radius: 99px;
+      margin: 20px 0;
+    }
+    .divider.center { margin: 20px auto; }
+
+    /* =========================================
+       SERVICES SECTION
+    ========================================= */
+    #services { background: var(--bg-mid); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      transition: all 0.4s;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--green-main), var(--gold));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .service-card:hover {
+      border-color: rgba(74,158,74,0.4);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .service-card:hover::before { opacity: 1; }
+    .service-icon {
+      width: 60px; height: 60px;
+      background: linear-gradient(135deg, var(--green-deep), var(--green-main));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 24px;
+      border: 1px solid rgba(74,158,74,0.3);
+    }
+    .service-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+    }
+    .service-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.7; }
+    .service-card .learn-more {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--green-bright);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 20px;
+      transition: gap 0.3s;
+    }
+    .service-card:hover .learn-more { gap: 10px; }
+
+    /* =========================================
+       WHY CHOOSE US
+    ========================================= */
+    #why {
+      background: var(--bg-dark);
+    }
+    .why-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .why-image-wrap {
+      position: relative;
+    }
+    .why-image-main {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .why-image-main img {
+      width: 100%; height: 500px;
+      object-fit: cover;
+      filter: brightness(0.8) saturate(1.2);
+    }
+    .why-badge-float {
+      position: absolute; bottom: -24px; right: -24px;
+      background: linear-gradient(135deg, var(--green-main), var(--green-light));
+      padding: 28px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .why-badge-float .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      line-height: 1;
+      color: white;
+    }
+    .why-badge-float .label {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .why-features { display: flex; flex-direction: column; gap: 28px; margin-top: 40px; }
+    .why-feature {
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 24px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .why-feature:hover { border-color: rgba(74,158,74,0.4); }
+    .why-feature-icon {
+      width: 48px; height: 48px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--green-deep), var(--green-main));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .why-feature h4 { font-size: 1rem; margin-bottom: 6px; font-weight: 600; }
+    .why-feature p { color: var(--text-muted); font-size: 0.9rem; }
+    @media (max-width: 900px) {
+      .why-layout { grid-template-columns: 1fr; gap: 40px; }
+      .why-image-wrap { display: none; }
+    }
+
+    /* =========================================
+       PROCESS SECTION
+    ========================================= */
+    #process { background: var(--bg-mid); }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2px;
+      margin-top: 60px;
+      position: relative;
+    }
+    .process-step {
+      padding: 40px 32px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      position: relative;
+      transition: all 0.3s;
+    }
+    .process-step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .process-step:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+    .process-step:hover { background: var(--green-deep); border-color: var(--green-main); }
+    .process-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--text-faint);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .process-step h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 10px; }
+    .process-step p { color: var(--text-muted); font-size: 0.88rem; }
+
+    /* =========================================
+       TESTIMONIALS
+    ========================================= */
+    #testimonials { background: var(--bg-dark); }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .testimonial-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-4px); }
+    .stars { color: var(--gold); font-size: 1rem; letter-spacing: 2px; margin-bottom: 20px; }
+    .testimonial-text {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 28px;
+    }
+    .testimonial-author {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .author-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-main), var(--green-light));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    .author-name { font-weight: 600; font-size: 0.95rem; }
+    .author-role { font-size: 0.8rem; color: var(--text-muted); }
+    .quote-mark {
+      position: absolute; top: 20px; right: 24px;
+      font-size: 4rem;
+      color: var(--green-deep);
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+
+    /* =========================================
+       PACKAGES / PRICING
+    ========================================= */
+    #packages { background: var(--bg-mid); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      align-items: stretch;
+    }
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      position: relative;
+      display: flex; flex-direction: column;
+      transition: all 0.4s;
+    }
+    .pricing-card:hover { transform: translateY(-8px); box-shadow: var(--shadow); }
+    .pricing-card.featured {
+      background: linear-gradient(160deg, var(--green-deep) 0%, var(--bg-card) 100%);
+      border-color: var(--green-main);
+    }
+    .pricing-card.featured::after {
+      content: 'MOST POPULAR';
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(90deg, var(--green-main), var(--gold));
+      color: white;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      padding: 5px 16px;
+      border-radius: 50px;
+    }
+    .pkg-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+    .pkg-desc { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 28px; }
+    .pkg-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--green-bright);
+      line-height: 1;
+    }
+    .pkg-price sup { font-size: 1.2rem; vertical-align: super; color: var(--text-muted); }
+    .pkg-price-note { color: var(--text-muted); font-size: 0.82rem; margin-bottom: 32px; }
+    .pkg-features { flex: 1; margin-bottom: 32px; }
+    .pkg-feature {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .pkg-feature:last-child { border-bottom: none; }
+    .pkg-feature .check { color: var(--green-bright); font-weight: 700; }
+    .btn-pkg {
+      display: block;
+      background: linear-gradient(135deg, var(--green-main), var(--green-light));
+      color: white;
+      text-align: center;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+    .btn-pkg:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,107,46,0.4); }
+    .btn-pkg.outline {
+      background: transparent;
+      border: 1px solid var(--green-main);
+      color: var(--green-bright);
+    }
+    .btn-pkg.outline:hover { background: rgba(74,158,74,0.1); }
+
+    /* =========================================
+       ABOUT
+    ========================================= */
+    #about { background: var(--bg-dark); }
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .about-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .about-img {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .about-img img { width: 100%; height: 220px; object-fit: cover; filter: brightness(0.75) saturate(1.1); }
+    .about-img.tall img { height: 300px; }
+    .about-img.tall { margin-top: 40px; }
+    .mission-vision {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; margin: 32px 0;
+    }
+    .mv-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 22px;
+    }
+    .mv-card h4 {
+      color: var(--gold);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .mv-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
+    .trust-badges {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px;
+    }
+    .trust-badge {
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      padding: 10px 18px;
+      border-radius: 50px;
+      font-size: 0.82rem;
+      color: var(--gold-light);
+      display: flex; align-items: center; gap: 6px;
+    }
+    @media (max-width: 900px) {
+      .about-layout { grid-template-columns: 1fr; gap: 40px; }
+      .about-visual { display: none; }
+    }
+
+    /* =========================================
+       FAQ
+    ========================================= */
+    #faq { background: var(--bg-mid); }
+    .faq-container { max-width: 760px; margin: 0 auto; }
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .faq-item.open { border-color: rgba(74,158,74,0.4); }
+    .faq-question {
+      padding: 22px 28px;
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer;
+      background: var(--bg-card);
+      transition: background 0.3s;
+    }
+    .faq-item.open .faq-question { background: var(--green-deep); }
+    .faq-question span { font-weight: 500; font-size: 0.97rem; }
+    .faq-icon {
+      width: 28px; height: 28px; flex-shrink: 0;
+      background: var(--green-deep);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; color: var(--green-bright);
+      transition: transform 0.3s;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-answer {
+      padding: 0 28px;
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.8;
+    }
+    .faq-item.open .faq-answer { max-height: 200px; padding: 20px 28px; }
+
+    /* =========================================
+       CTA BANNER
+    ========================================= */
+    #cta {
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 50%, rgba(46,107,46,0.3), transparent),
+        var(--bg-dark);
+      text-align: center;
+      padding: 100px 5%;
+    }
+    .cta-inner { max-width: 680px; margin: 0 auto; }
+    .cta-inner h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      margin-bottom: 18px;
+    }
+    .cta-inner p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 40px; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* =========================================
+       CONTACT
+    ========================================= */
+    #contact { background: var(--bg-mid); }
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 60px;
+    }
+    .contact-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+    .contact-info p { color: var(--text-muted); margin-bottom: 36px; font-size: 0.95rem; }
+    .contact-details { display: flex; flex-direction: column; gap: 20px; }
+    .contact-detail {
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .contact-detail-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--green-deep), var(--green-main));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .contact-detail strong { display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 4px; }
+    .contact-detail span { font-size: 0.95rem; }
+    .contact-form {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.3s;
+      outline: none;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--green-main);
+    }
+    .form-group textarea { resize: vertical; min-height: 130px; }
+    .form-group select option { background: var(--bg-dark); }
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 24px;
+      background: rgba(74,158,74,0.1);
+      border: 1px solid var(--green-main);
+      border-radius: var(--radius-sm);
+      color: var(--green-bright);
+      font-size: 0.95rem;
+      margin-top: 16px;
+    }
+    @media (max-width: 900px) {
+      .contact-layout { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+    footer {
+      background: #070908;
+      border-top: 1px solid var(--border);
+      padding: 60px 5% 30px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-brand .nav-logo { font-size: 1.5rem; margin-bottom: 16px; display: block; }
+    .footer-brand p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.7; max-width: 280px; }
+    .footer-social { display: flex; gap: 10px; margin-top: 24px; }
+    .social-btn {
+      width: 38px; height: 38px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    .social-btn:hover { background: var(--green-main); border-color: var(--green-main); }
+    .footer-col h5 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 20px; }
+    .footer-col li { margin-bottom: 12px; }
+    .footer-col a { color: var(--text-muted); font-size: 0.88rem; transition: color 0.3s; }
+    .footer-col a:hover { color: var(--green-bright); }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 28px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { color: var(--text-faint); font-size: 0.82rem; }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    /* =========================================
+       BACK TO TOP + WHATSAPP
+    ========================================= */
+    #backToTop, #whatsappBtn {
+      position: fixed;
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: none;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 900;
+    }
+    #backToTop {
+      bottom: 80px; right: 24px;
+      background: var(--green-main);
+      color: white;
+    }
+    #backToTop.visible { opacity: 1; pointer-events: all; }
+    #backToTop:hover { background: var(--green-light); transform: translateY(-4px); }
+    #whatsappBtn {
+      bottom: 24px; right: 24px;
+      background: #25d366;
+      color: white;
+      opacity: 1;
+      pointer-events: all;
+    }
+    #whatsappBtn:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(37,211,102,0.4); }
+
+    /* =========================================
+       SCROLL ANIMATIONS
+    ========================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.7s, transform 0.7s; }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.7s, transform 0.7s; }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    @keyframes fadeDown { from { opacity:0; transform: translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeLeft { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform:translateX(0); } }
+
+    /* =========================================
+       MOBILE TWEAKS
+    ========================================= */
+    @media (max-width: 600px) {
+      section { padding: 70px 5%; }
+      .hero-stats { gap: 28px; }
+      .contact-form { padding: 24px; }
+      .hero-actions { flex-direction: column; }
+      .btn-primary, .btn-outline { justify-content: center; }
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-bug">🐛</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#home" class="nav-logo"><span>Bug</span> Baron<sup>™</sup></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#packages">Pricing</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="nav-cta">Free Quote</a></li>
+  </ul>
+  <div class="nav-hamburger" id="hamburger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ===================== HOME ===================== -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Certified Pest Control Experts</div>
+    <h1 class="hero-title">
+      Your Home.<br>
+      <span class="accent">Pest-Free.</span><br>
+      <span class="gold-word">Guaranteed.</span>
+    </h1>
+    <p class="hero-desc">Bug Baron delivers premium, eco-conscious pest extermination — protecting families, homes, and businesses from unwanted invaders. Fast, discreet, and effective.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">🛡️ Get a Free Quote</a>
+      <a href="#services" class="btn-outline">Explore Services →</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num" data-target="2400">0</div>
+        <div class="hero-stat-label">Homes Protected</div>
+      </div>
+      <div>
+        <div class="hero-stat-num" data-target="15">0</div>
+        <div class="hero-stat-label">Years Experience</div>
+      </div>
+      <div>
+        <div class="hero-stat-num" data-target="100">0</div>
+        <div class="hero-stat-label">% Satisfaction</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-image-frame">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Professional pest control technician at work" />
+      <div class="hero-image-badge">
+        <strong>✓ Eco-Safe</strong>
+        <span>Child & Pet Friendly Treatments</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SERVICES ===================== -->
+<section id="services">
+  <div class="section-header center reveal">
+    <span class="section-tag">What We Do</span>
+    <h2 class="section-title">Comprehensive Pest Control Solutions</h2>
+    <div class="divider center"></div>
+    <p class="section-subtitle">From single-family homes to large commercial properties, we eliminate every type of pest with precision and care.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon">🐀</div>
+      <h3>Rodent Control</h3>
+      <p>Complete elimination of rats and mice using humane trapping and exclusion techniques. We seal entry points to prevent re-infestation permanently.</p>
+      <a href="#contact" class="learn-more">Book Now →</a>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🪲</div>
+      <h3>Cockroach Extermination</h3>
+      <p>Advanced gel baiting, insect growth regulators, and residual sprays to destroy cockroach colonies at the source — kitchen, drains, and walls.</p>
+      <a href="#contact" class="learn-more">Book Now →</a>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🐜</div>
+      <h3>Ant Treatment</h3>
+      <p>Targeted ant colony baiting systems that eliminate entire colonies including the queen. Long-lasting barrier treatments for lasting protection.</p>
+      <a href="#contact" class="learn-more">Book Now →</a>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🦟</div>
+      <h3>Mosquito Control</h3>
+      <p>Larvicide treatments, fogging, and standing water removal to dramatically reduce mosquito populations around your property all season.</p>
+      <a href="#contact" class="learn-more">Book Now →</a>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🪵</div>
+      <h3>Termite Treatment</h3>
+      <p>Advanced baiting systems and liquid soil treatments that stop termite colonies before they cause costly structural damage to your property.</p>
+      <a href="#contact" class="learn-more">Book Now →</a>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🦂</div>
+      <h3>Bed Bug Elimination</h3>
+      <p>Heat treatment and chemical applications that completely eliminate bed bug infestations — including eggs — from mattresses, furniture, and walls.</p>
+      <a href="#contact" class="learn-more">Book Now →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHY CHOOSE US ===================== -->
+<section id="why">
+  <div class="why-layout">
+    <div class="why-image-wrap reveal-left">
+      <div class="why-image-main">
+        <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=700&q=80" alt="Clean, pest-free luxury home interior" />
+      </div>
+      <div class="why-badge-float">
+        <div class="num">15+</div>
+        <div class="label">Years of Expertise</div>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <span class="section-tag">Why Bug Baron</span>
+      <h2 class="section-title">The Elite Standard in Pest Control</h2>
+      <div class="divider"></div>
+      <p style="color:var(--text-muted);margin-bottom:8px;">We don't just spray and leave. Bug Baron uses a science-backed integrated pest management approach — understanding pest biology to deliver lasting results that generic services can't match.</p>
+      <div class="why-features">
+        <div class="why-feature">
+          <div class="why-feature-icon">🔬</div>
+          <div>
+            <h4>Science-Backed Methods</h4>
+            <p>Integrated Pest Management (IPM) protocols tailored to your specific infestation — not a one-size-fits-all spray.</p>
+          </div>
+        </div>
+        <div class="why-feature">
+          <div class="why-feature-icon">🌿</div>
+          <div>
+            <h4>Eco-Safe Treatments</h4>
+            <p>All products are EPA-registered and safe for children, pets, and the environment. We protect your family, not just your home.</p>
+          </div>
+        </div>
+        <div class="why-feature">
+          <div class="why-feature-icon">🛡️</div>
+          <div>
+            <h4>Satisfaction Guarantee</h4>
+            <p>If pests return between scheduled visits, we come back at no extra charge. Your protection is our promise.</p>
+          </div>
+        </div>
+        <div class="why-feature">
+          <div class="why-feature-icon">⚡</div>
+          <div>
+            <h4>Same-Day Response</h4>
+            <p>Emergency pest situations demand fast action. We offer same-day and next-day appointments for urgent cases.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROCESS ===================== -->
+<section id="process">
+  <div class="section-header center reveal">
+    <span class="section-tag">How It Works</span>
+    <h2 class="section-title">Our Proven 4-Step Process</h2>
+    <div class="divider center"></div>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="process-num">01</div>
+      <h4>Inspection</h4>
+      <p>Thorough property assessment to identify pest species, entry points, and infestation severity.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="process-num">02</div>
+      <h4>Custom Plan</h4>
+      <p>We design a tailored treatment strategy using the safest, most effective methods for your situation.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="process-num">03</div>
+      <h4>Treatment</h4>
+      <p>Precision application of eco-safe products by certified technicians using professional-grade equipment.</p>
+    </div>
+    <div class="process-step reveal" style="border-radius: 0 var(--radius) var(--radius) 0;">
+      <div class="process-num">04</div>
+      <h4>Follow-Up</h4>
+      <p>Post-treatment monitoring and free revisit guarantee to ensure complete, lasting elimination.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TESTIMONIALS ===================== -->
+<section id="testimonials">
+  <div class="section-header center reveal">
+    <span class="section-tag">Client Reviews</span>
+    <h2 class="section-title">What Our Clients Say</h2>
+    <div class="divider center"></div>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="quote-mark">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">Bug Baron completely solved our cockroach problem — something three other companies failed to do. The technician was professional, explained everything clearly, and the kitchen has been pest-free for six months now.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👩</div>
+        <div>
+          <div class="author-name">Sarah M.</div>
+          <div class="author-role">Homeowner</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="quote-mark">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">We used Bug Baron for our restaurant's rodent issue. They were discreet, fast, and the results were immediate. Their commercial package gives us peace of mind every single month.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👨</div>
+        <div>
+          <div class="author-name">James K.</div>
+          <div class="author-role">Restaurant Owner</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="quote-mark">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">The termite treatment saved us thousands in potential damage. Bug Baron found the colony we didn't even know existed. I recommend them to every homeowner in the area.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👩</div>
+        <div>
+          <div class="author-name">Priya N.</div>
+          <div class="author-role">Property Manager</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PACKAGES ===================== -->
+<section id="packages">
+  <div class="section-header center reveal">
+    <span class="section-tag">Pricing Plans</span>
+    <h2 class="section-title">Transparent, Competitive Pricing</h2>
+    <div class="divider center"></div>
+    <p class="section-subtitle">No hidden fees. No surprises. Choose the protection level that fits your needs.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <div class="pkg-name">Scout</div>
+      <div class="pkg-desc">Perfect for minor infestations and preventive protection</div>
+      <div class="pkg-price"><sup>$</sup>89<span style="font-size:1rem;color:var(--text-muted)"> /visit</span></div>
+      <div class="pkg-price-note">One-time treatment</div>
+      <ul class="pkg-features">
+        <li class="pkg-feature"><span class="check">✓</span> Single pest type</li>
+        <li class="pkg-feature"><span class="check">✓</span> Interior + exterior spray</li>
+        <li class="pkg-feature"><span class="check">✓</span> Written report</li>
+        <li class="pkg-feature"><span class="check">✓</span> 30-day revisit guarantee</li>
+        <li class="pkg-feature" style="color:var(--text-faint)">✕ Multi-pest treatment</li>
+        <li class="pkg-feature" style="color:var(--text-faint)">✕ Monitoring stations</li>
+      </ul>
+      <a href="#contact" class="btn-pkg outline">Get Started</a>
+    </div>
+    <div class="pricing-card featured reveal">
+      <div class="pkg-name">Baron</div>
+      <div class="pkg-desc">Comprehensive protection — our most popular plan</div>
+      <div class="pkg-price"><sup>$</sup>199<span style="font-size:1rem;color:rgba(255,255,255,0.5)"> /quarter</span></div>
+      <div class="pkg-price-note">Billed quarterly · Save 30%</div>
+      <ul class="pkg-features">
+        <li class="pkg-feature"><span class="check">✓</span> All common pest types</li>
+        <li class="pkg-feature"><span class="check">✓</span> Interior + exterior + perimeter</li>
+        <li class="pkg-feature"><span class="check">✓</span> Monitoring stations installed</li>
+        <li class="pkg-feature"><span class="check">✓</span> Unlimited revisit guarantee</li>
+        <li class="pkg-feature"><span class="check">✓</span> Priority scheduling</li>
+        <li class="pkg-feature"><span class="check">✓</span> Digital treatment report</li>
+      </ul>
+      <a href="#contact" class="btn-pkg">Book Baron Plan</a>
+    </div>
+    <div class="pricing-card reveal">
+      <div class="pkg-name">Sovereign</div>
+      <div class="pkg-desc">Elite commercial & estate protection — fully bespoke</div>
+      <div class="pkg-price" style="font-size:2rem;">Custom</div>
+      <div class="pkg-price-note">Call for quote</div>
+      <ul class="pkg-features">
+        <li class="pkg-feature"><span class="check">✓</span> All pest types + termites</li>
+        <li class="pkg-feature"><span class="check">✓</span> Monthly scheduled visits</li>
+        <li class="pkg-feature"><span class="check">✓</span> Dedicated account manager</li>
+        <li class="pkg-feature"><span class="check">✓</span> 24/7 emergency response</li>
+        <li class="pkg-feature"><span class="check">✓</span> HACCP compliance reports</li>
+        <li class="pkg-feature"><span class="check">✓</span> Heat treatment included</li>
+      </ul>
+      <a href="#contact" class="btn-pkg outline">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section id="about">
+  <div class="about-layout">
+    <div class="about-visual reveal-left">
+      <div>
+        <div class="about-img">
+          <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&q=80" alt="Professional pest control team" />
+        </div>
+        <div class="about-img tall">
+          <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&q=80" alt="Clean modern kitchen pest free" />
+        </div>
+      </div>
+      <div>
+        <div class="about-img tall">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Pest control technician spraying" />
+        </div>
+        <div class="about-img">
+          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&q=80" alt="Beautiful pest free home exterior" />
+        </div>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <span class="section-tag">Our Story</span>
+      <h2 class="section-title">Built on a Promise of Protection</h2>
+      <div class="divider"></div>
+      <p style="color:var(--text-muted);margin-bottom:20px;">Bug Baron was founded with a single conviction: every family deserves a safe, pest-free home. After 15 years in the industry, we've grown into a trusted name — but our values haven't changed.</p>
+      <p style="color:var(--text-muted);margin-bottom:32px;">We employ only certified, background-checked technicians who are passionate about solving pest problems responsibly. We invest in ongoing training and the latest eco-safe technologies so you receive the highest standard of care.</p>
+      <div class="mission-vision">
+        <div class="mv-card">
+          <h4>🎯 Our Mission</h4>
+          <p>Deliver reliable, science-backed pest control that protects people and the planet simultaneously.</p>
+        </div>
+        <div class="mv-card">
+          <h4>👁️ Our Vision</h4>
+          <p>To be the most trusted pest control brand in the region — known for excellence, integrity, and results.</p>
+        </div>
+      </div>
+      <div class="trust-badges">
+        <span class="trust-badge">🏅 Licensed & Insured</span>
+        <span class="trust-badge">🌿 EPA Certified</span>
+        <span class="trust-badge">⭐ 4.9/5 Rating</span>
+        <span class="trust-badge">🔒 Background Checked</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section id="faq">
+  <div class="section-header center reveal">
+    <span class="section-tag">FAQ</span>
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="divider center"></div>
+  </div>
+  <div class="faq-container">
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>How safe are your treatments for children and pets?</span>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">All our products are EPA-registered and carefully selected for minimal toxicity to mammals. We'll advise you on how long to stay out of treated areas (typically 1–2 hours). Our technicians are trained to apply treatments in a way that maximizes effectiveness while minimizing any risk to your family.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>How long does a standard treatment take?</span>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">Most standard residential treatments take 45–90 minutes depending on property size and pest type. Larger properties or complex infestations (like termite treatments) may require 2–4 hours. We'll give you a time estimate before we begin.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>What if pests come back after treatment?</span>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">We stand behind our work with a free revisit guarantee. If the same pest returns within the warranty period (30 days for single treatments, unlimited for quarterly plans), we'll return and re-treat at no charge. Your satisfaction is non-negotiable.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>Do I need to leave my home during treatment?</span>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">For most treatments, we ask that occupants and pets vacate the treated areas for 1–2 hours to allow products to dry fully. For heat treatments or fumigation, longer absences may be needed. Your technician will provide clear instructions beforehand.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>Do you offer commercial pest control services?</span>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">Absolutely. Our Sovereign plan is designed specifically for commercial clients including restaurants, warehouses, offices, and multi-unit buildings. We offer HACCP-compliant documentation, monthly scheduled visits, and 24/7 emergency response.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA BANNER ===================== -->
+<section id="cta">
+  <div class="cta-inner reveal">
+    <span class="section-tag" style="display:inline-block;">Take Action Today</span>
+    <h2>Ready to Reclaim Your <span style="color:var(--green-bright)">Pest-Free</span> Life?</h2>
+    <p>Don't wait for a minor problem to become a major infestation. Get your free, no-obligation inspection today and experience the Bug Baron difference.</p>
+    <div class="cta-actions">
+      <a href="#contact" class="btn-primary">🛡️ Get Free Inspection</a>
+      <a href="mailto:contactglanders@gmail.com" class="btn-outline">📧 Email Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact">
+  <div class="section-header reveal">
+    <span class="section-tag">Get In Touch</span>
+    <h2 class="section-title">Request a Free Quote</h2>
+    <div class="divider"></div>
+    <p class="section-subtitle">Fill in the form below and we'll get back to you within 2 hours.</p>
+  </div>
+  <div class="contact-layout">
+    <div class="contact-info reveal-left">
+      <h3>We're Here to Help</h3>
+      <p>Whether you have a question, need an emergency visit, or want to discuss a service plan — our team is ready.</p>
+      <div class="contact-details">
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📧</div>
+          <div>
+            <strong>Email</strong>
+            <span><a href="mailto:contactglanders@gmail.com" style="color:var(--green-bright)">contactglanders@gmail.com</a></span>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📞</div>
+          <div>
+            <strong>Phone</strong>
+            <span>Call or WhatsApp for fastest response</span>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">⏱️</div>
+          <div>
+            <strong>Response Time</strong>
+            <span>Within 2 hours on business days</span>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">🌍</div>
+          <div>
+            <strong>Service Area</strong>
+            <span>Residential & Commercial properties</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form reveal-right">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="fname" placeholder="John" />
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="lname" placeholder="Smith" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="john@example.com" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="phone" placeholder="+1 (555) 000-0000" />
+      </div>
+      <div class="form-group">
+        <label>Service Required</label>
+        <select id="service">
+          <option value="">Select a service...</option>
+          <option>Rodent Control</option>
+          <option>Cockroach Extermination</option>
+          <option>Ant Treatment</option>
+          <option>Mosquito Control</option>
+          <option>Termite Treatment</option>
+          <option>Bed Bug Elimination</option>
+          <option>General Inspection</option>
+          <option>Commercial Package</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea id="message" placeholder="Describe your pest issue — location, severity, when you first noticed it..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="submitForm()" style="width:100%;justify-content:center;">🚀 Send My Request</button>
+      <div class="form-success" id="formSuccess">
+        ✅ Thank you! We've received your request and will contact you within 2 hours.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#home" class="nav-logo"><span>Bug</span> Baron<sup>™</sup></a>
+      <p>Premium pest control services protecting homes and businesses from unwanted invaders — with science, care, and an iron-clad guarantee.</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn" aria-label="Facebook">📘</a>
+        <a href="#" class="social-btn" aria-label="Instagram">📸</a>
+        <a href="#" class="social-btn" aria-label="Twitter">🐦</a>
+        <a href="mailto:contactglanders@gmail.com" class="social-btn" aria-label="Email">📧</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#services">Rodent Control</a></li>
+        <li><a href="#services">Cockroach Treatment</a></li>
+        <li><a href="#services">Termite Control</a></li>
+        <li><a href="#services">Mosquito Control</a></li>
+        <li><a href="#services">Bed Bug Removal</a></li>
+        <li><a href="#services">Ant Extermination</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#packages">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="mailto:contactglanders@gmail.com">contactglanders@gmail.com</a></li>
+        <li><a href="#contact">Get a Free Quote</a></li>
+        <li><a href="#contact">Emergency Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Bug Baron™. All rights reserved.</p>
+    <p>Professional Pest Control Services</p>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+<!-- WHATSAPP -->
+<a id="whatsappBtn" href="https://wa.me/?text=Hi+Bug+Baron!+I'd+like+a+free+pest+control+quote." target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script>
+  // LOADER
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('loader').classList.add('hidden'), 1600);
+  });
+
+  // NAVBAR SCROLL
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+    document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
+  });
+
+  // HAMBURGER
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('open');
+  }));
+
+  // FAQ
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // FORM SUBMIT
+  function submitForm() {
+    const fname = document.getElementById('fname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if (!fname || !email) { alert('Please fill in your name and email.'); return; }
+    const service = document.getElementById('service').value;
+    const lname = document.getElementById('lname').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const body = `Name: ${fname} ${lname}%0AEmail: ${email}%0APhone: ${phone}%0AService: ${service}%0AMessage: ${message}`;
+    window.location.href = `mailto:contactglanders@gmail.com?subject=Pest Control Quote Request - ${fname}&body=${body}`;
+    document.getElementById('formSuccess').style.display = 'block';
+  }
+
+  // COUNTER ANIMATION
+  function animateCounters() {
+    document.querySelectorAll('[data-target]').forEach(el => {
+      const target = parseInt(el.dataset.target);
+      const duration = 2000;
+      const step = target / (duration / 16);
+      let current = 0;
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = Math.floor(current).toLocaleString();
+        if (current >= target) clearInterval(timer);
+      }, 16);
+    });
+  }
+
+  // SCROLL REVEAL
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        if (entry.target.closest('#home')) animateCounters();
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObserver.observe(el));
+
+  // Animate counters when hero is in view
+  const heroObserver = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) animateCounters();
+  }, { threshold: 0.3 });
+  const heroStats = document.querySelector('.hero-stats');
+  if (heroStats) heroObserver.observe(heroStats);
+</script>
+</body>
+</html>
